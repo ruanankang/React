@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Clock</title>
+		<script
+			src="https://unpkg.com/react@16/umd/react.development.js"
+			crossorigin
+		></script>
+		<script
+			src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+			crossorigin
+		></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	</head>
+	<body>
+		<div id="root"></div>
+
+		<script type="text/babel">
+			class Clock extends React.Component {
+				constructor(props) {
+					super(props);
+					this.state = {
+						date: new Date()
+					};
+				}
+
+				// 组件渲染
+				render() {
+					return (
+						<div>
+							<h1>
+								TIME:{" "}
+								{this.state.date.toLocaleTimeString("chinese", {
+									hour12: false
+								})}
+							</h1>
+						</div>
+					);
+				}
+
+				// 组件挂载
+				componentDidMount() {
+					// this.timeID = setInterval(this.tick.bind(this), 1000);
+					this.timeID = setInterval(() => this.tick(), 1000);
+				}
+
+				// 组件卸载
+				componentWillUnmount() {
+					console.log(this.timeID);
+					clearInterval(this.timeID);
+				}
+
+				// 普通方法
+				tick() {
+					this.setState({
+						date: new Date()
+					});
+				}
+			}
+			ReactDOM.render(<Clock />, document.getElementById("root"));
+		</script>
+	</body>
+</html>

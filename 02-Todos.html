@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Todos</title>
+		<script
+			src="https://unpkg.com/react@16/umd/react.development.js"
+			crossorigin
+		></script>
+		<script
+			src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+			crossorigin
+		></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	</head>
+
+	<body>
+		<div id="todos"></div>
+	</body>
+
+	<script type="text/babel">
+		class Todos extends React.Component {
+			constructor(props) {
+				super(props);
+				this.state = {
+					items: [],
+					text: ""
+				};
+
+				// 两种方式写类的实例方法（两种方式绑定this）
+				this.handleChange = this.handleChange.bind(this);
+				this.handleSubmit = (e) => {
+					e.preventDefault(); // 取消表单默认的url请求，避免刷新页面
+					if (!this.state.text) return;
+					const newItem = {
+						text: this.state.text,
+						id: Date.now()
+					};
+					// 解决this.state/this.props的异步更新问题
+					this.setState((state, props) => ({
+						items: state.items.concat(newItem),
+						text: ""
+					}));
+				};
+			}
+
+			render() {
+				return (
+					<div>
+						<h2>TODOS</h2>
+						<form onSubmit={this.handleSubmit}>
+							<label htmlFor="new-todo">新的任务</label>
+							<input
+								type="text"
+								id="new-todo"
+								onChange={this.handleChange}
+								value={this.state.text}
+							/>
+							<span>已有 {this.state.items.length} 条任务</span>
+							<button>新增任务</button>
+						</form>
+						<TodoLists items={this.state.items} />
+					</div>
+				);
+			}
+
+			handleChange(e) {
+				this.setState({
+					text: e.target.value
+				});
+			}
+		}
+
+		class TodoLists extends React.Component {
+			render() {
+				return (
+					<ul>
+						{this.props.items.map((item) => (
+							<li key={item.id}>{item.text}</li>
+						))}
+					</ul>
+				);
+			}
+		}
+
+		ReactDOM.render(<Todos />, document.getElementById("todos"));
+	</script>
+</html>

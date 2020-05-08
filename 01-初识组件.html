@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Hello World</title>
+		<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+		<!-- Don't use this in production: -->
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			.title h1 {
+				font-size: 20px;
+				color: darkgoldenrod;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="root"></div>
+		<div id="root2"></div>
+		<div id="root3"></div>
+		<div id="root4"></div>
+		<div id="root5"></div>
+		<script type="text/babel">
+			// 1、直接写JSX
+			ReactDOM.render(<h1>Hello World</h1>, document.getElementById("root"));
+
+			// 2、类class组件，有状态，钩子函数，生命周期
+			class HelloWorld extends React.Component {
+				render() {
+					return (
+						<div className="title">
+							<h1>Hello, {this.props.greetName}</h1>
+						</div>
+					);
+				}
+			}
+			ReactDOM.render(
+				<div>
+					<HelloWorld greetName="Alice" />
+					<HelloWorld greetName="Bob" />
+					<HelloWorld greetName="Cindy" />
+				</div>,
+				document.getElementById("root2")
+			);
+
+			// 3、函数式组件，无状态
+			function Hello(props) {
+				return <h1>Hello {props.name}</h1>;
+			}
+			ReactDOM.render(<Hello name="Joker" />, document.getElementById("root5"));
+
+			// JSX的原理，语法糖
+			const h1 = React.createElement("h1", {}, "Hello");
+			ReactDOM.render(h1, document.getElementById("root3"));
+
+			// 局部更新UI
+			function tick() {
+				const element = (
+					<div>
+						<h1>时间：{new Date().toLocaleTimeString()}</h1>
+					</div>
+				);
+				ReactDOM.render(element, document.getElementById("root4"));
+			}
+			setInterval(tick, 1000);
+		</script>
+	</body>
+</html>
